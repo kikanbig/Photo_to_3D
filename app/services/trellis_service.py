@@ -6,9 +6,24 @@ import asyncio
 import logging
 from typing import Dict, Any, Optional, List
 from PIL import Image
-import torch
 import numpy as np
 import structlog
+
+# Try to import torch, but don't fail if not available
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    # Create mock torch for Railway deployment
+    class MockTorch:
+        @staticmethod
+        def cuda_is_available():
+            return False
+        @staticmethod
+        def zeros(*args, **kwargs):
+            return np.zeros(args[0] if args else (1,))
+    torch = MockTorch()
 
 from app.core.config import settings
 
@@ -19,7 +34,7 @@ class TrellisService:
     
     def __init__(self):
         self.pipeline = None
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "cuda" if (TORCH_AVAILABLE and torch.cuda.is_available()) else "cpu"
         self.is_initialized = False
         
     async def initialize(self):
@@ -251,8 +266,8 @@ class TrellisService:
         
         class MockMesh:
             def __init__(self):
-                self.vertices = torch.zeros((100, 3))
-                self.faces = torch.zeros((100, 3), dtype=torch.long)
+                self.vertices = np.zeros((100, 3))
+                self.faces = np.zeros((100, 3), dtype=np.int32)
         
         outputs = {}
         if "gaussian" in formats:
@@ -348,7 +363,7 @@ class TrellisService:
             del self.pipeline
             self.pipeline = None
         
-        if torch.cuda.is_available():
+        if TORCH_AVAILABLE and torch.cuda.is_available():
             torch.cuda.empty_cache()
         
         self.is_initialized = False

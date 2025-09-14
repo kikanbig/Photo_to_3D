@@ -5,23 +5,21 @@ python-multipart==0.0.6
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-# TRELLIS dependencies (CPU versions for Railway)
-torch>=2.0.0
-torchvision>=0.15.0
-transformers>=4.30.0
-diffusers>=0.21.0
-accelerate>=0.20.0
-# xformers>=0.0.20  # Commented out for Railway deployment
-# flash-attn>=2.3.0  # Commented out for Railway deployment (requires CUDA)
+# TRELLIS dependencies - MINIMAL for Railway (mock mode)
+# torch>=2.0.0  # Commented out - too heavy for Railway build
+# torchvision>=0.15.0  # Commented out - too heavy for Railway build
+# transformers>=4.30.0  # Commented out - too heavy for Railway build
+# diffusers>=0.21.0  # Commented out - too heavy for Railway build
+# accelerate>=0.20.0  # Commented out - too heavy for Railway build
 
-# Image processing
+# Image processing - MINIMAL
 Pillow>=10.0.0
-opencv-python>=4.8.0
+# opencv-python>=4.8.0  # Commented out - too heavy for Railway build
 imageio>=2.31.0
-rembg>=2.0.50
+# rembg>=2.0.50  # Commented out - too heavy for Railway build
 
-# 3D processing
-trimesh>=4.0.0
+# 3D processing - MINIMAL
+# trimesh>=4.0.0  # Commented out - too heavy for Railway build
 pygltflib>=1.16.0
 plyfile>=0.7.4
 
