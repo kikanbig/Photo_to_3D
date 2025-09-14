@@ -26,8 +26,8 @@ class Settings(BaseSettings):
         default="microsoft/TRELLIS-image-large", 
         env="TRELLIS_MODEL_PATH"
     )
-    CUDA_VISIBLE_DEVICES: str = Field(default="0", env="CUDA_VISIBLE_DEVICES")
-    ATTN_BACKEND: str = Field(default="flash-attn", env="ATTN_BACKEND")
+    CUDA_VISIBLE_DEVICES: str = Field(default="", env="CUDA_VISIBLE_DEVICES")  # Empty for CPU
+    ATTN_BACKEND: str = Field(default="xformers", env="ATTN_BACKEND")  # Use xformers instead of flash-attn
     SPCONV_ALGO: str = Field(default="native", env="SPCONV_ALGO")
     
     # File Storage

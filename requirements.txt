@@ -5,14 +5,14 @@ python-multipart==0.0.6
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-# TRELLIS dependencies
+# TRELLIS dependencies (CPU versions for Railway)
 torch>=2.0.0
 torchvision>=0.15.0
 transformers>=4.30.0
 diffusers>=0.21.0
 accelerate>=0.20.0
-xformers>=0.0.20
-flash-attn>=2.3.0
+# xformers>=0.0.20  # Commented out for Railway deployment
+# flash-attn>=2.3.0  # Commented out for Railway deployment (requires CUDA)
 
 # Image processing
 Pillow>=10.0.0
