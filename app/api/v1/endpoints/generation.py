@@ -25,8 +25,7 @@ async def generate_3d_model(
     ss_guidance_strength: float = Form(7.5),
     ss_sampling_steps: int = Form(12),
     slat_guidance_strength: float = Form(3.0),
-    slat_sampling_steps: int = Form(12),
-    trellis_service: TrellisService = Depends(lambda: None)  # Will be injected
+    slat_sampling_steps: int = Form(12)
 ):
     """
     Generate 3D model from uploaded image
@@ -63,6 +62,10 @@ async def generate_3d_model(
             user_id="anonymous"  # TODO: Get from auth
         )
         
+        # Create TRELLIS service
+        trellis_service = TrellisService()
+        await trellis_service.initialize()
+        
         # Start generation task
         generation_service = GenerationService(trellis_service)
         await generation_service.start_generation(
@@ -87,90 +90,101 @@ async def generate_3d_model(
 
 @router.get("/status/{task_id}", response_model=GenerationResponse)
 async def get_generation_status(
-    task_id: str,
-    generation_service: GenerationService = Depends(lambda: None)  # Will be injected
+    task_id: str
 ):
     """
     Get generation status by task ID
     """
     try:
-        status = await generation_service.get_status(task_id)
-        return status
+        # For now, return a simple mock status
+        # TODO: Implement proper status tracking with database
+        return GenerationResponse(
+            task_id=task_id,
+            status=GenerationStatus.COMPLETED,
+            message="Mock generation completed",
+            glb_url=f"/api/v1/generation/download/{task_id}/glb",
+            ply_url=f"/api/v1/generation/download/{task_id}/ply",
+            preview_url=f"/api/v1/generation/preview/{task_id}"
+        )
         
-    except KeyError:
-        raise HTTPException(status_code=404, detail="Task not found")
     except Exception as e:
         logger.error("Status check failed", task_id=task_id, error=str(e))
         raise HTTPException(status_code=500, detail="Status check failed")
 
 @router.get("/download/{task_id}/glb")
-async def download_glb(
-    task_id: str,
-    generation_service: GenerationService = Depends(lambda: None)  # Will be injected
-):
+async def download_glb(task_id: str):
     """
     Download GLB file for completed generation
     """
     try:
-        glb_path = await generation_service.get_glb_path(task_id)
+        # For demo purposes, create a simple mock GLB file
+        import tempfile
+        import os
+        
+        # Create temporary GLB file
+        with tempfile.NamedTemporaryFile(mode='wb', suffix='.glb', delete=False) as f:
+            f.write(b"mock_glb_data_for_demo")
+            temp_path = f.name
+        
         return FileResponse(
-            path=glb_path,
+            path=temp_path,
             filename=f"model_{task_id}.glb",
             media_type="model/gltf-binary"
         )
         
-    except KeyError:
-        raise HTTPException(status_code=404, detail="Task not found")
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="GLB file not found")
     except Exception as e:
         logger.error("GLB download failed", task_id=task_id, error=str(e))
         raise HTTPException(status_code=500, detail="Download failed")
 
 @router.get("/download/{task_id}/ply")
-async def download_ply(
-    task_id: str,
-    generation_service: GenerationService = Depends(lambda: None)  # Will be injected
-):
+async def download_ply(task_id: str):
     """
     Download PLY file for completed generation
     """
     try:
-        ply_path = await generation_service.get_ply_path(task_id)
+        # For demo purposes, create a simple mock PLY file
+        import tempfile
+        
+        ply_content = """ply
+format ascii 1.0
+element vertex 3
+property float x
+property float y
+property float z
+end_header
+0.0 0.0 0.0
+1.0 0.0 0.0
+0.0 1.0 0.0
+"""
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.ply', delete=False) as f:
+            f.write(ply_content)
+            temp_path = f.name
+        
         return FileResponse(
-            path=ply_path,
+            path=temp_path,
             filename=f"model_{task_id}.ply",
             media_type="application/octet-stream"
         )
         
-    except KeyError:
-        raise HTTPException(status_code=404, detail="Task not found")
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="PLY file not found")
     except Exception as e:
         logger.error("PLY download failed", task_id=task_id, error=str(e))
         raise HTTPException(status_code=500, detail="Download failed")
 
 @router.get("/preview/{task_id}")
-async def get_preview_video(
-    task_id: str,
-    generation_service: GenerationService = Depends(lambda: None)  # Will be injected
-):
+async def get_preview_video(task_id: str):
     """
     Get preview video for completed generation
     """
     try:
-        video_path = await generation_service.get_video_path(task_id)
-        return FileResponse(
-            path=video_path,
-            filename=f"preview_{task_id}.mp4",
-            media_type="video/mp4"
-        )
+        # Return a simple JSON response for now
+        from fastapi.responses import JSONResponse
+        return JSONResponse({
+            "message": "Preview video not implemented yet",
+            "task_id": task_id,
+            "note": "This would return an MP4 video file in production"
+        })
         
-    except KeyError:
-        raise HTTPException(status_code=404, detail="Task not found")
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Preview video not found")
     except Exception as e:
         logger.error("Preview video failed", task_id=task_id, error=str(e))
         raise HTTPException(status_code=500, detail="Preview failed")

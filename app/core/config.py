@@ -56,10 +56,7 @@ class Settings(BaseSettings):
     
     # File Upload
     MAX_FILE_SIZE_MB: int = Field(default=10, env="MAX_FILE_SIZE_MB")
-    ALLOWED_IMAGE_TYPES: List[str] = Field(
-        default=["image/png", "image/jpeg", "image/webp"],
-        env="ALLOWED_IMAGE_TYPES"
-    )
+    ALLOWED_IMAGE_TYPES: List[str] = Field(default=["image/png", "image/jpeg", "image/webp"])
     
     # 3D Generation
     GENERATION_TIMEOUT_SECONDS: int = Field(default=300, env="GENERATION_TIMEOUT_SECONDS")
