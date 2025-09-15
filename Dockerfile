@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements-asgi.txt .
+COPY requirements-railway.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements-asgi.txt
+RUN pip install --no-cache-dir -r requirements-railway.txt
 
 # Copy application code
 COPY . .

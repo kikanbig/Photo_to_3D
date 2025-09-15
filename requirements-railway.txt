@@ -1,0 +1,10 @@
+# Requirements for Railway deployment with PostgreSQL
+uvicorn==0.15.0
+
+# Database with PostgreSQL support
+sqlalchemy==1.4.46
+psycopg2-binary==2.9.7
+alembic==1.12.1
+
+# Additional utilities
+python-dotenv==1.0.0

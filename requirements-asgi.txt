@@ -1,2 +1,10 @@
-# ASGI requirements - ONLY uvicorn
+# ASGI requirements with database support
 uvicorn==0.15.0
+
+# Database (SQLite для локальной разработки, PostgreSQL для Railway)
+sqlalchemy==1.4.46
+# psycopg2-binary==2.9.7  # Только для Railway
+alembic==1.12.1
+
+# Additional utilities
+python-dotenv==1.0.0
