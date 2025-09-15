@@ -6,8 +6,23 @@ import asyncio
 import logging
 from typing import Dict, Any, Optional, List
 from PIL import Image
-import numpy as np
 import structlog
+
+# Try to import numpy, but don't fail if not available
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    # Create mock numpy for Railway deployment
+    class MockNumpy:
+        @staticmethod
+        def zeros(*args, **kwargs):
+            return [[0.0, 0.0, 0.0] for _ in range(args[0][0] if args and len(args[0]) > 0 else 100)]
+        @staticmethod
+        def int32(*args, **kwargs):
+            return int
+    np = MockNumpy()
 
 # Try to import torch, but don't fail if not available
 try:
