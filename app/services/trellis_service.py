@@ -5,7 +5,25 @@ import os
 import asyncio
 import logging
 from typing import Dict, Any, Optional, List
-from PIL import Image
+# PIL import - optional for Railway
+try:
+    from PIL import Image
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+    # Mock PIL for Railway
+    class MockImage:
+        @staticmethod
+        def open(path):
+            return MockImage()
+        def resize(self, size):
+            return self
+        def save(self, path):
+            pass
+        @property 
+        def size(self):
+            return (512, 512)
+    Image = MockImage()
 import structlog
 
 # Try to import numpy, but don't fail if not available

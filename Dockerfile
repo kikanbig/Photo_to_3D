@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements-ultra-minimal.txt .
+COPY requirements-asgi.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements-ultra-minimal.txt
+RUN pip install --no-cache-dir -r requirements-asgi.txt
 
 # Copy application code
 COPY . .
@@ -24,4 +24,4 @@ COPY . .
 EXPOSE $PORT
 
 # Start command
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+CMD uvicorn asgi_app:app --host 0.0.0.0 --port $PORT --workers 1

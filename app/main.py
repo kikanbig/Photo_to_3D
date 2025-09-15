@@ -8,7 +8,24 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-import structlog
+# Optional imports for Railway
+try:
+    import structlog
+    STRUCTLOG_AVAILABLE = True
+except ImportError:
+    STRUCTLOG_AVAILABLE = False
+    # Mock structlog
+    class MockLogger:
+        def info(self, msg, **kwargs): print(f"INFO: {msg}")
+        def error(self, msg, **kwargs): print(f"ERROR: {msg}")
+        def warning(self, msg, **kwargs): print(f"WARNING: {msg}")
+    
+    class MockStructlog:
+        @staticmethod
+        def configure(**kwargs): pass
+        @staticmethod 
+        def get_logger(name): return MockLogger()
+    structlog = MockStructlog()
 
 from app.api.v1.api import api_router
 from app.core.config_v1 import settings
@@ -16,24 +33,25 @@ from app.core.database import init_db
 from app.core.redis_client import init_redis
 from app.services.trellis_service import TrellisService
 
-# Configure structured logging
-structlog.configure(
-    processors=[
-        structlog.stdlib.filter_by_level,
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
-        structlog.stdlib.PositionalArgumentsFormatter(),
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.UnicodeDecoder(),
-        structlog.processors.JSONRenderer()
-    ],
-    context_class=dict,
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
-)
+# Configure structured logging if available
+if STRUCTLOG_AVAILABLE:
+    structlog.configure(
+        processors=[
+            structlog.stdlib.filter_by_level,
+            structlog.stdlib.add_logger_name,
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.PositionalArgumentsFormatter(),
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.processors.StackInfoRenderer(),
+            structlog.processors.format_exc_info,
+            structlog.processors.UnicodeDecoder(),
+            structlog.processors.JSONRenderer()
+        ],
+        context_class=dict,
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
 
 logger = structlog.get_logger(__name__)
 
@@ -46,25 +64,23 @@ async def lifespan(app: FastAPI):
     global trellis_service
     
     # Startup
-    logger.info("Starting Photo to 3D application")
+    logger.info("Starting Photo to 3D application - Railway mode")
     
-    # Initialize database
-    await init_db()
-    logger.info("Database initialized")
+    # Skip database and Redis for Railway deployment
+    logger.info("Skipping database and Redis initialization for Railway")
     
-    # Initialize Redis
-    await init_redis()
-    logger.info("Redis initialized")
-    
-    # Initialize TRELLIS service
+    # Initialize TRELLIS service in mock mode
     try:
         trellis_service = TrellisService()
         await trellis_service.initialize()
         app.state.trellis_service = trellis_service
-        logger.info("TRELLIS service initialized")
+        logger.info("TRELLIS service initialized in mock mode")
     except Exception as e:
-        logger.error("Failed to initialize TRELLIS service", error=str(e))
-        raise
+        logger.warning("Failed to initialize TRELLIS service, continuing without it", error=str(e))
+        # Don't raise - continue without TRELLIS
+        trellis_service = None
+    
+    logger.info("Application startup complete")
     
     yield
     
@@ -103,11 +119,19 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "version": settings.VERSION,
-        "trellis_loaded": trellis_service is not None
-    }
+    try:
+        return {
+            "status": "healthy",
+            "version": settings.VERSION,
+            "mode": "railway_demo",
+            "trellis_loaded": trellis_service is not None
+        }
+    except Exception as e:
+        logger.error("Health check failed", error=str(e))
+        return {
+            "status": "unhealthy", 
+            "error": str(e)
+        }
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):

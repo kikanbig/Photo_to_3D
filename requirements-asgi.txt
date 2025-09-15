@@ -1,0 +1,2 @@
+# ASGI requirements - ONLY uvicorn
+uvicorn==0.15.0
