@@ -1,0 +1,19 @@
+# Ultra minimal requirements - NO RUST compilation needed
+fastapi==0.100.0
+uvicorn==0.23.2
+python-multipart==0.0.6
+
+# Use older Pydantic that doesn't require Rust
+pydantic==1.10.12
+
+# Basic image support
+Pillow==10.0.1
+
+# Logging
+structlog==23.2.0
+
+# HTTP client
+httpx==0.24.1
+
+# File handling
+aiofiles==23.2.1

@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 import structlog
 
 from app.api.v1.api import api_router
-from app.core.config import settings
+from app.core.config_v1 import settings
 from app.core.database import init_db
 from app.core.redis_client import init_redis
 from app.services.trellis_service import TrellisService

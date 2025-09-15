@@ -1,9 +1,9 @@
-# Minimal requirements for Railway deployment - ONLY ESSENTIAL
+# Minimal requirements for Railway deployment - ONLY ESSENTIAL (Python 3.11 compatible)
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
-pydantic==2.5.0
-pydantic-settings==2.1.0
+pydantic==2.4.2
+pydantic-settings==2.0.3
 
 # Image processing - ONLY PIL
 Pillow>=10.0.0

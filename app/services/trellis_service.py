@@ -40,7 +40,7 @@ except ImportError:
             return np.zeros(args[0] if args else (1,))
     torch = MockTorch()
 
-from app.core.config import settings
+from app.core.config_v1 import settings
 
 logger = structlog.get_logger(__name__)
 
