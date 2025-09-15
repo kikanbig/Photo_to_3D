@@ -23,5 +23,5 @@ COPY . .
 # Expose port
 EXPOSE $PORT
 
-# Start command
-CMD uvicorn asgi_app:app --host 0.0.0.0 --port $PORT --workers 1
+# Start command - use Python script to handle PORT variable
+CMD ["python", "start.py"]
