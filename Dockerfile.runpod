@@ -26,6 +26,10 @@ COPY ml_server/requirements_simple.txt ./requirements.txt
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
+# Install easydict separately (critical for TRELLIS)
+RUN pip install --no-cache-dir easydict==1.10.0
+RUN python -c "import easydict; print('✅ easydict installed successfully')"
+
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
 
