@@ -22,6 +22,12 @@ if os.path.exists(trellis_path):
 
 try:
     print("🔄 Attempting to import TRELLIS...")
+    
+    # Try to fix torchvision import issues first
+    import torchvision
+    print(f"✅ torchvision version: {torchvision.__version__}")
+    
+    # Import TRELLIS components
     from trellis.pipelines import TrellisImageTo3DPipeline
     from trellis.utils import render_utils, postprocessing_utils
     TRELLIS_AVAILABLE = True
@@ -31,7 +37,28 @@ except ImportError as e:
     print(f"❌ Import error type: {type(e)}")
     import traceback
     print(f"❌ Full traceback: {traceback.format_exc()}")
-    TRELLIS_AVAILABLE = False
+    
+    # Try alternative approach - use TRELLIS without problematic imports
+    try:
+        print("🔄 Trying alternative TRELLIS import...")
+        import sys
+        import importlib.util
+        
+        # Try to import TRELLIS core without pipelines
+        spec = importlib.util.spec_from_file_location(
+            "trellis_core", 
+            "/workspace/trellis_source/trellis/__init__.py"
+        )
+        if spec and spec.loader:
+            trellis_core = importlib.util.module_from_spec(spec)
+            # Don't execute - just mark as partially available
+            print("⚠️ TRELLIS core found, using fallback mode")
+            TRELLIS_AVAILABLE = False  # Keep false for now
+        else:
+            TRELLIS_AVAILABLE = False
+    except Exception as e2:
+        print(f"❌ Alternative import also failed: {e2}")
+        TRELLIS_AVAILABLE = False
 
 class TrellisWorker:
     """Worker class for TRELLIS 3D generation"""
