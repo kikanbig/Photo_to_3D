@@ -11,15 +11,26 @@ import torch
 import numpy as np
 
 # Add TRELLIS to Python path
-sys.path.append('/workspace/trellis_source')
+trellis_path = '/workspace/trellis_source'
+sys.path.append(trellis_path)
+
+# Debug information
+print(f"🔍 Python path: {sys.path}")
+print(f"🔍 TRELLIS path exists: {os.path.exists(trellis_path)}")
+if os.path.exists(trellis_path):
+    print(f"🔍 TRELLIS contents: {os.listdir(trellis_path)}")
 
 try:
+    print("🔄 Attempting to import TRELLIS...")
     from trellis.pipelines import TrellisImageTo3DPipeline
     from trellis.utils import render_utils, postprocessing_utils
     TRELLIS_AVAILABLE = True
     print("✅ TRELLIS modules imported successfully")
 except ImportError as e:
     print(f"❌ TRELLIS import failed: {e}")
+    print(f"❌ Import error type: {type(e)}")
+    import traceback
+    print(f"❌ Full traceback: {traceback.format_exc()}")
     TRELLIS_AVAILABLE = False
 
 class TrellisWorker:
