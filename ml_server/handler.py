@@ -155,6 +155,24 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
         if webhook_url:
             notify_webhook(webhook_url, task_id, "completed", result)
         
+        # Convert files to base64 for download
+        result_with_data = {}
+        for key, file_path in result.items():
+            if isinstance(file_path, str) and os.path.exists(file_path):
+                try:
+                    with open(file_path, "rb") as f:
+                        file_data = f.read()
+                    
+                    result_with_data[key] = file_path
+                    result_with_data[f"{key}_base64"] = base64.b64encode(file_data).decode('utf-8')
+                    result_with_data[f"{key}_size"] = len(file_data)
+                    
+                    print(f"✅ Encoded {key}: {len(file_data)} bytes")
+                    
+                except Exception as e:
+                    print(f"⚠️ Failed to encode {key}: {e}")
+                    result_with_data[key] = file_path
+        
         # Cleanup temporary files
         try:
             os.unlink(input_image_path)
@@ -167,7 +185,7 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
         return {
             "task_id": task_id,
             "status": "completed",
-            "result": result
+            "result": result_with_data
         }
         
     except Exception as e:
