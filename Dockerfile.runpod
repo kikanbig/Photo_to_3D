@@ -29,9 +29,10 @@ RUN pip install --upgrade pip && \
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
 
-# Install TRELLIS dependencies
+# TRELLIS не имеет setup.py, просто используем как модуль
 WORKDIR /workspace/trellis_source
-RUN pip install -e .
+RUN echo "✅ TRELLIS cloned successfully"
+RUN ls -la
 
 # Copy our ML server code
 WORKDIR /workspace

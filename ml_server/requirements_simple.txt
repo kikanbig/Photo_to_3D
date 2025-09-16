@@ -20,6 +20,12 @@ runpod>=1.0.0
 # Utilities
 requests>=2.31.0
 numpy>=1.24.0
+scipy>=1.10.0
+
+# Additional dependencies that TRELLIS might need
+einops>=0.7.0
+omegaconf>=2.3.0
+tqdm>=4.64.0
 
 # File handling (optional)
 boto3>=1.28.0
