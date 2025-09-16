@@ -1,5 +1,6 @@
 """
 RunPod Handler for TRELLIS 3D Generation
+Version: 2.0 - Fixed image_data support + easydict dependency
 """
 import os
 import json
