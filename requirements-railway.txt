@@ -8,3 +8,4 @@ alembic==1.12.1
 
 # Additional utilities
 python-dotenv==1.0.0
+httpx==0.24.1

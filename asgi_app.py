@@ -4,9 +4,114 @@ ASGI приложение с поддержкой базы данных и RunPo
 import json
 import uuid
 import os
+import base64
+import asyncio
 from datetime import datetime
 from typing import Dict, Any
 from database import SessionLocal, GenerationTask, GenerationStatus, init_database
+
+try:
+    import httpx
+    HTTPX_AVAILABLE = True
+except ImportError:
+    HTTPX_AVAILABLE = False
+    print("⚠️ httpx не установлен - RunPod интеграция недоступна")
+
+# RunPod configuration
+RUNPOD_ENDPOINT_ID = os.getenv("RUNPOD_ENDPOINT_ID")
+RUNPOD_API_KEY = os.getenv("RUNPOD_API_KEY") 
+RUNPOD_ENABLED = os.getenv("RUNPOD_ENABLED", "false").lower() == "true"
+
+async def call_runpod(image_data: bytes, task_id: str) -> Dict[str, Any]:
+    """
+    Вызов RunPod для генерации 3D модели
+    """
+    if not RUNPOD_ENABLED or not HTTPX_AVAILABLE:
+        return {
+            "status": "failed",
+            "error": "RunPod не настроен или httpx недоступен"
+        }
+    
+    try:
+        # Кодируем изображение
+        image_b64 = base64.b64encode(image_data).decode('utf-8')
+        
+        # Payload
+        payload = {
+            "input": {
+                "image_data": image_b64,
+                "image_format": "jpg",
+                "task_id": task_id
+            }
+        }
+        
+        # Headers
+        headers = {
+            "Authorization": f"Bearer {RUNPOD_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        url = f"https://api.runpod.ai/v2/{RUNPOD_ENDPOINT_ID}/run"
+        
+        async with httpx.AsyncClient(timeout=300.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+            
+            if result.get("status") == "IN_QUEUE":
+                # Ждем выполнения
+                job_id = result["id"]
+                return await wait_runpod_completion(job_id, task_id)
+            
+            return result
+            
+    except Exception as e:
+        return {
+            "status": "failed",
+            "error": f"RunPod error: {str(e)}"
+        }
+
+async def wait_runpod_completion(job_id: str, task_id: str) -> Dict[str, Any]:
+    """
+    Ждем завершения задачи в RunPod
+    """
+    headers = {"Authorization": f"Bearer {RUNPOD_API_KEY}"}
+    status_url = f"https://api.runpod.ai/v2/{RUNPOD_ENDPOINT_ID}/status/{job_id}"
+    
+    async with httpx.AsyncClient() as client:
+        for _ in range(300):  # 5 минут максимум
+            try:
+                response = await client.get(status_url, headers=headers)
+                response.raise_for_status()
+                result = response.json()
+                
+                status = result.get("status", "unknown")
+                
+                if status == "COMPLETED":
+                    return {
+                        "status": "completed",
+                        "job_id": job_id,
+                        "result": result.get("output", {})
+                    }
+                elif status == "FAILED":
+                    return {
+                        "status": "failed",
+                        "error": result.get("error", "RunPod task failed"),
+                        "job_id": job_id
+                    }
+                
+                await asyncio.sleep(1)
+                
+            except Exception as e:
+                return {
+                    "status": "failed",
+                    "error": f"Status check error: {str(e)}"
+                }
+    
+    return {
+        "status": "failed",
+        "error": "Timeout waiting for completion"
+    }
 
 async def app(scope: Dict[str, Any], receive, send):
     """ASGI приложение"""

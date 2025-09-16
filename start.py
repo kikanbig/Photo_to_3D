@@ -23,9 +23,9 @@ if __name__ == "__main__":
         print(f"⚠️ Database initialization failed: {e}")
         print("🔄 Continuing without database (fallback mode)")
     
-    # Run the server
+    # Run the server with simplified ASGI app
     uvicorn.run(
-        "asgi_app:app",
+        "asgi_simple:app",
         host=host,
         port=port,
         workers=1,
