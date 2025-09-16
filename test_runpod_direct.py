@@ -1,6 +1,7 @@
 """
 Прямое тестирование RunPod endpoint после деплоя
 """
+import os
 import requests
 import base64
 import json
@@ -10,9 +11,9 @@ def test_runpod_endpoint():
     """
     Тест RunPod endpoint напрямую
     """
-    # Эти данные получим после успешного деплоя
+    # Данные твоего RunPod endpoint
     ENDPOINT_ID = "z34poz9n7a9487"  # твой endpoint ID
-    API_KEY = "RP-..."  # нужно получить из RunPod Dashboard
+    API_KEY = os.getenv("RUNPOD_API_KEY", "RP-...")  # получи из переменных окружения
     
     if API_KEY == "RP-...":
         print("❌ Нужно получить API ключ из RunPod Dashboard")

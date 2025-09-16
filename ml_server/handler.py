@@ -91,27 +91,43 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
         
         # Extract parameters
         image_url = job_input.get("image_url")
+        image_data = job_input.get("image_data")
+        image_format = job_input.get("image_format", "png")
         task_id = job_input.get("task_id", "unknown")
         webhook_url = job_input.get("webhook_url")
         parameters = job_input.get("parameters", {})
         
+        # Validate input - нужен либо image_url, либо image_data
+        if not image_url and not image_data:
+            return {
+                "status": "failed",
+                "error": "Either image_url or image_data is required",
+                "task_id": task_id
+            }
+        
         print(f"🚀 Starting 3D generation for task: {task_id}")
-        print(f"📷 Image URL: {image_url}")
+        if image_url:
+            print(f"📷 Image URL: {image_url}")
+        else:
+            print(f"📷 Image data: base64 ({len(image_data)} chars)")
         
-        if not image_url:
-            raise ValueError("image_url is required")
-        
-        # Download input image
-        print("📥 Downloading input image...")
-        response = requests.get(image_url, timeout=30)
-        response.raise_for_status()
+        # Load and save image from URL or base64 data
+        if image_url:
+            print("📥 Downloading input image...")
+            response = requests.get(image_url, timeout=30)
+            response.raise_for_status()
+            image_content = response.content
+        else:
+            print("📥 Decoding base64 image...")
+            image_content = base64.b64decode(image_data)
         
         # Save to temporary file
-        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp_file:
-            tmp_file.write(response.content)
+        file_extension = f'.{image_format}' if image_data else '.jpg'
+        with tempfile.NamedTemporaryFile(suffix=file_extension, delete=False) as tmp_file:
+            tmp_file.write(image_content)
             input_image_path = tmp_file.name
         
-        print(f"✅ Image downloaded: {input_image_path}")
+        print(f"✅ Image saved: {input_image_path}")
         
         # Generate 3D model using TRELLIS
         print("🧠 Generating 3D model with TRELLIS...")
