@@ -57,8 +57,8 @@ class TrellisWorker:
         try:
             print("📦 Loading TRELLIS pipeline...")
             
-            # Set environment variables
-            os.environ.setdefault("ATTN_BACKEND", "flash-attn")
+            # Set environment variables (fallback to xformers if flash-attn not available)
+            os.environ.setdefault("ATTN_BACKEND", "xformers")
             os.environ.setdefault("SPCONV_ALGO", "native")
             
             # Load pipeline
