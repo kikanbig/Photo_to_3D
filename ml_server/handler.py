@@ -11,7 +11,13 @@ from typing import Dict, Any
 import runpod
 import requests
 from PIL import Image
-import boto3
+try:
+    import boto3
+    S3_AVAILABLE = True
+except ImportError:
+    print("⚠️ boto3 не установлен, S3 загрузка недоступна")
+    S3_AVAILABLE = False
+
 from trellis_worker import TrellisWorker
 
 # Initialize TRELLIS worker
@@ -19,11 +25,14 @@ trellis_worker = TrellisWorker()
 
 # AWS S3 client (optional)
 s3_client = None
-try:
-    s3_client = boto3.client('s3')
-    print("✅ S3 client initialized")
-except Exception as e:
-    print(f"⚠️ S3 client not available: {e}")
+if S3_AVAILABLE:
+    try:
+        s3_client = boto3.client('s3')
+        print("✅ S3 client initialized")
+    except Exception as e:
+        print(f"⚠️ S3 client not available: {e}")
+else:
+    print("⚠️ S3 не доступен - boto3 не установлен")
 
 def upload_to_s3(file_path: str, bucket: str, key: str) -> str:
     """Upload file to S3 and return public URL"""

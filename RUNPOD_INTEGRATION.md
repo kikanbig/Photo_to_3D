@@ -16,10 +16,15 @@
 ### **Этап 2: Получение данных подключения** 📝
 После успешной сборки RunPod предоставит:
 ```
-Endpoint ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-API Key: ваш-api-ключ
-Endpoint URL: https://api.runpod.ai/v2/ваш-endpoint-id
+Endpoint ID: z34poz9n7a9487 (уже есть!)
+API Key: нужно создать в Settings → API Keys
+Endpoint URL: https://api.runpod.ai/v2/z34poz9n7a9487
 ```
+
+**Создание API ключа:**
+1. RunPod Dashboard → Settings → API Keys
+2. Create New Key → Copy
+3. Сохрани ключ (начинается с "RP-...")
 
 ### **Этап 3: Настройка переменных окружения** ⚙️
 
