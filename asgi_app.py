@@ -1,8 +1,9 @@
 """
-ASGI приложение с поддержкой базы данных
+ASGI приложение с поддержкой базы данных и RunPod интеграции
 """
 import json
 import uuid
+import os
 from datetime import datetime
 from typing import Dict, Any
 from database import SessionLocal, GenerationTask, GenerationStatus, init_database
