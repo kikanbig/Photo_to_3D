@@ -35,11 +35,25 @@ try:
     if torch_version != "2.1.0":
         print(f"⚠️ Warning: Expected PyTorch 2.1.0, got {torch_version}")
     
-    # Import TRELLIS components
-    from trellis.pipelines import TrellisImageTo3DPipeline
-    from trellis.utils import render_utils, postprocessing_utils
-    TRELLIS_AVAILABLE = True
-    print("✅ TRELLIS modules imported successfully")
+    # Import TRELLIS components (skip problematic modules)
+    try:
+        from trellis.pipelines import TrellisImageTo3DPipeline
+        from trellis.utils import render_utils, postprocessing_utils
+        TRELLIS_AVAILABLE = True
+        print("✅ TRELLIS modules imported successfully")
+    except ImportError as trellis_err:
+        if "open3d" in str(trellis_err):
+            print("⚠️ TRELLIS requires open3d, trying to import without text-to-3d pipeline...")
+            try:
+                # Try to import only image-to-3d pipeline
+                from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
+                from trellis.utils import render_utils, postprocessing_utils
+                TRELLIS_AVAILABLE = True
+                print("✅ TRELLIS image-to-3d pipeline imported successfully")
+            except ImportError:
+                raise trellis_err
+        else:
+            raise trellis_err
 except ImportError as e:
     print(f"❌ TRELLIS import failed: {e}")
     print(f"❌ Import error type: {type(e)}")

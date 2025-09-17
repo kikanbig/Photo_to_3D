@@ -30,6 +30,10 @@ RUN pip install --upgrade pip && \
 RUN pip install --no-cache-dir easydict==1.10.0
 RUN python -c "import easydict; print('✅ easydict installed successfully')"
 
+# Install open3d separately to avoid dependency conflicts
+RUN pip install --no-cache-dir --no-deps open3d-cpu==0.18.0
+RUN python -c "import open3d; print('✅ open3d installed successfully')"
+
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
 
