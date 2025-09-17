@@ -1,9 +1,11 @@
-# Упрощенные зависимости для RunPod (без проблемных пакетов)
-torch==2.1.0
-torchvision==0.16.0
-transformers>=4.30.0
-diffusers>=0.21.0
-accelerate>=0.20.0
+# Упрощенные зависимости для RunPod (СОВМЕСТИМЫЕ ВЕРСИИ)
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.1.0+cu118
+torchvision==0.16.0+cu118
+torchaudio==2.1.0+cu118
+transformers==4.35.2
+diffusers==0.21.4
+accelerate==0.24.1
 
 # Image processing
 Pillow>=10.0.0

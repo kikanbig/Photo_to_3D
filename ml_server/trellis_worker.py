@@ -23,9 +23,17 @@ if os.path.exists(trellis_path):
 try:
     print("🔄 Attempting to import TRELLIS...")
     
-    # Try to fix torchvision import issues first
+    # Check PyTorch compatibility first
+    import torch
     import torchvision
-    print(f"✅ torchvision version: {torchvision.__version__}")
+    print(f"🔍 PyTorch version: {torch.__version__}")
+    print(f"🔍 TorchVision version: {torchvision.__version__}")
+    print(f"🔍 CUDA available: {torch.cuda.is_available()}")
+    
+    # Check for known compatibility issues
+    torch_version = torch.__version__.split('+')[0]  # Remove +cu118 suffix
+    if torch_version != "2.1.0":
+        print(f"⚠️ Warning: Expected PyTorch 2.1.0, got {torch_version}")
     
     # Import TRELLIS components
     from trellis.pipelines import TrellisImageTo3DPipeline
