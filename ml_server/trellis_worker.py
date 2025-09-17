@@ -1,5 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
+Version: 2024-09-17-22:00 (with monkey patch for open3d.visualization)
 """
 import os
 import sys

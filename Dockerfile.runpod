@@ -59,8 +59,9 @@ RUN if [ -f "pyproject.toml" ]; then pip install -e .; fi
 # Add TRELLIS to Python path
 RUN echo "export PYTHONPATH=/workspace/trellis_source:$PYTHONPATH" >> ~/.bashrc
 
-# Copy our ML server code
+# Copy our ML server code (force cache bust)
 WORKDIR /workspace
+RUN echo "Cache bust: $(date)" > /tmp/cachebust
 COPY ml_server/ .
 
 # Set Python path
