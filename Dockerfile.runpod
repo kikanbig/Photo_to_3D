@@ -32,7 +32,8 @@ RUN python -c "import easydict; print('✅ easydict installed successfully')"
 
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
-RUN pip install --no-cache-dir numpy>=1.20.0 pillow>=8.0.0 matplotlib>=3.0.0 plotly>=5.0.0 dash>=2.0.0
+RUN pip install --no-cache-dir --upgrade numpy pillow matplotlib
+RUN pip install --no-cache-dir plotly dash || echo "plotly/dash install failed, continuing..."
 RUN python -c "import sys; print('Python:', sys.version[:10])"
 RUN python -c "import numpy; print('numpy OK:', numpy.__version__)" || echo "numpy FAILED"
 RUN python -c "import matplotlib; print('matplotlib OK:', matplotlib.__version__)" || echo "matplotlib FAILED"
