@@ -30,8 +30,9 @@ RUN pip install --upgrade pip && \
 RUN pip install --no-cache-dir easydict==1.10.0
 RUN python -c "import easydict; print('✅ easydict installed successfully')"
 
-# Install open3d separately (allow dependencies for proper installation)
-RUN pip install --no-cache-dir open3d==0.17.0
+# Install open3d separately (force upgrade to resolve conflicts)
+RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
+RUN pip install --no-cache-dir numpy>=1.20.0 pillow>=8.0.0 matplotlib>=3.0.0
 RUN python -c "import open3d; print('✅ open3d GPU version installed:', open3d.__version__)"
 
 # Clone TRELLIS repository
