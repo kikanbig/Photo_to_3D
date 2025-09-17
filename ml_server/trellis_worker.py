@@ -42,8 +42,18 @@ try:
         TRELLIS_AVAILABLE = True
         print("✅ TRELLIS modules imported successfully")
     except ImportError as trellis_err:
-        if "open3d" in str(trellis_err):
-            print("⚠️ TRELLIS requires open3d, trying to import without text-to-3d pipeline...")
+        if "plotly" in str(trellis_err) or "dash" in str(trellis_err):
+            print("⚠️ TRELLIS requires plotly/dash, trying to import without visualization...")
+            try:
+                # Try to import only image-to-3d pipeline without visualization
+                from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
+                from trellis.utils import render_utils, postprocessing_utils
+                TRELLIS_AVAILABLE = True
+                print("✅ TRELLIS image-to-3d pipeline imported successfully (without visualization)")
+            except ImportError:
+                raise trellis_err
+        elif "open3d" in str(trellis_err):
+            print("⚠️ TRELLIS requires open3d, trying alternative import...")
             try:
                 # Try to import only image-to-3d pipeline
                 from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
