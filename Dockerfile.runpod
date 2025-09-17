@@ -33,7 +33,33 @@ RUN python -c "import easydict; print('✅ easydict installed successfully')"
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
 RUN pip install --no-cache-dir numpy>=1.20.0 pillow>=8.0.0 matplotlib>=3.0.0 plotly>=5.0.0
-RUN python -c "import open3d; print('✅ open3d GPU version installed:', open3d.__version__)"
+RUN python -c "
+import sys
+print('🔍 Python version:', sys.version)
+print('🔍 Python path:', sys.path[:3])
+try:
+    import numpy
+    print('✅ numpy:', numpy.__version__)
+except Exception as e:
+    print('❌ numpy error:', e)
+try:
+    import matplotlib
+    print('✅ matplotlib:', matplotlib.__version__)
+except Exception as e:
+    print('❌ matplotlib error:', e)
+try:
+    import plotly
+    print('✅ plotly:', plotly.__version__)
+except Exception as e:
+    print('❌ plotly error:', e)
+try:
+    import open3d
+    print('✅ open3d GPU version installed:', open3d.__version__)
+except Exception as e:
+    print('❌ open3d import error:', e)
+    import traceback
+    traceback.print_exc()
+"
 
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
