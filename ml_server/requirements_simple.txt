@@ -16,6 +16,7 @@ trimesh>=4.0.0
 pygltflib>=1.16.0
 plyfile>=0.7.4
 rembg>=2.0.0
+onnxruntime-gpu>=1.15.0
 
 # RunPod integration
 runpod>=1.0.0
