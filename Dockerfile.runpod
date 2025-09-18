@@ -44,6 +44,7 @@ RUN python -c "import dash; print('dash OK:', dash.__version__)" || echo "dash F
 RUN python -c "import pandas; print('pandas OK:', pandas.__version__)" || echo "pandas FAILED"
 RUN python -c "import sklearn; print('sklearn OK:', sklearn.__version__)" || echo "sklearn FAILED"
 RUN python -c "import addict; print('addict OK:', addict.__version__)" || echo "addict FAILED"
+RUN python -c "import utils3d; print('utils3d OK:', utils3d.__version__)" || echo "utils3d FAILED"
 RUN python -c "import open3d; print('open3d OK:', open3d.__version__)" || echo "open3d FAILED"
 
 # Clone TRELLIS repository

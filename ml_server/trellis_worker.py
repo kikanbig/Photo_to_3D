@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-09:45 (force pandas install + full diagnostics)
+Version: 2024-09-18-10:00 (pandas fixed + utils3d for TRELLIS gaussian models)
 """
 import os
 import sys
