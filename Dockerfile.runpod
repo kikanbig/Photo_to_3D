@@ -38,9 +38,7 @@ RUN python -c "import utils3d; print('✅ utils3d installed successfully')"
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
 RUN pip install --no-cache-dir --upgrade numpy pillow matplotlib
-# Try to install plotly/dash, but continue without them if they fail
-RUN pip install --no-cache-dir plotly==5.0.0 || echo "⚠️ plotly failed to install"
-RUN pip install --no-cache-dir dash==2.0.0 || echo "⚠️ dash failed to install"
+# plotly/dash now handled in requirements.txt with compatible versions
 RUN python -c "import sys; print('Python:', sys.version[:10])"
 RUN python -c "import numpy; print('numpy OK:', numpy.__version__)" || echo "numpy FAILED"
 RUN python -c "import matplotlib; print('matplotlib OK:', matplotlib.__version__)" || echo "matplotlib FAILED"

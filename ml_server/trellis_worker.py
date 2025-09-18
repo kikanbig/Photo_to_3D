@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-12:40 (install utils3d separately - fix missing dependency)
+Version: 2024-09-18-12:50 (fix werkzeug/dash version conflict)
 """
 import os
 import sys

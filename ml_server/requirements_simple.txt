@@ -36,6 +36,8 @@ addict>=2.4.0
 pandas>=1.5.0
 utils3d>=0.1.0
 # blinker>=1.6.0  # Excluded due to distutils conflict with base image
+werkzeug==2.2.3
+dash==2.14.1
 
 # Optional heavy dependencies (may cause build issues)
 # xformers>=0.0.20
