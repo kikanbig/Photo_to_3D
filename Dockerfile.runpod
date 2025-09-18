@@ -29,9 +29,11 @@ RUN echo "✅ pip upgraded successfully"
 RUN pip install --no-cache-dir -r requirements.txt --ignore-installed blinker
 RUN echo "✅ requirements.txt installed successfully (ignoring system blinker)"
 
-# Install easydict separately (critical for TRELLIS)
+# Install critical dependencies separately
 RUN pip install --no-cache-dir easydict==1.10.0
 RUN python -c "import easydict; print('✅ easydict installed successfully')"
+RUN pip install --no-cache-dir utils3d>=0.1.0
+RUN python -c "import utils3d; print('✅ utils3d installed successfully')"
 
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
