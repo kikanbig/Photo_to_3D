@@ -37,9 +37,16 @@ RUN python -c "import utils3d; print('✅ utils3d installed successfully')"
 
 # Install Kaolin separately (NVIDIA 3D library)
 RUN echo "Cache bust kaolin: $(date +%s)" > /tmp/cachebust_kaolin
-RUN pip install --no-cache-dir kaolin==0.15.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html || \
-    pip install --no-cache-dir kaolin==0.14.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html || \
-    echo "⚠️ Kaolin installation failed, TRELLIS will use fallback mode"
+RUN echo "🔧 Attempting to install Kaolin 0.15.0..."
+RUN pip install --no-cache-dir kaolin==0.15.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html && \
+    echo "✅ Kaolin 0.15.0 installed successfully" || \
+    (echo "❌ Kaolin 0.15.0 failed, trying 0.14.0..." && \
+     pip install --no-cache-dir kaolin==0.14.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html && \
+     echo "✅ Kaolin 0.14.0 installed successfully" || \
+     (echo "❌ Kaolin 0.14.0 failed, trying generic..." && \
+      pip install --no-cache-dir kaolin && \
+      echo "✅ Generic Kaolin installed successfully" || \
+      echo "⚠️ ALL Kaolin installations failed, TRELLIS will use fallback mode"))
 
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0

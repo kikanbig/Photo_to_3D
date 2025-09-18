@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-14:00 (install Kaolin from NVIDIA wheel)
+Version: 2024-09-18-14:15 (enhanced Kaolin installation with fallbacks)
 """
 import os
 import sys
