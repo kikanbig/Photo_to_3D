@@ -35,6 +35,12 @@ RUN python -c "import easydict; print('✅ easydict installed successfully')"
 RUN pip install --no-cache-dir utils3d>=0.1.0
 RUN python -c "import utils3d; print('✅ utils3d installed successfully')"
 
+# Install Kaolin separately (NVIDIA 3D library)
+RUN echo "Cache bust kaolin: $(date +%s)" > /tmp/cachebust_kaolin
+RUN pip install --no-cache-dir kaolin==0.15.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html || \
+    pip install --no-cache-dir kaolin==0.14.0 -f https://nvidia-kaolin.s3.us-east-1.amazonaws.com/torch-2.1.0_cu118.html || \
+    echo "⚠️ Kaolin installation failed, TRELLIS will use fallback mode"
+
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0
 RUN pip install --no-cache-dir --upgrade numpy pillow matplotlib
