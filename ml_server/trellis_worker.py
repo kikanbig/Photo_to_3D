@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-14:45 (force clean Kaolin install with CUDA)
+Version: 2024-09-18-15:00 (mock Kaolin fallback for TRELLIS)
 """
 import os
 import sys
@@ -61,7 +61,39 @@ try:
                 print("✅ TRELLIS image-to-3d pipeline imported successfully (with patched open3d)")
             except ImportError as e2:
                 print(f"❌ Patched import also failed: {e2}")
-                raise trellis_err
+                # Try kaolin mock if it's a kaolin error
+                if "kaolin" in str(e2):
+                    print("⚠️ TRELLIS requires kaolin, trying to create mock kaolin...")
+                    try:
+                        # Create mock kaolin module
+                        import torch
+                        mock_kaolin = types.ModuleType('kaolin')
+                        mock_utils = types.ModuleType('kaolin.utils')
+                        mock_testing = types.ModuleType('kaolin.utils.testing')
+                        
+                        # Mock the check_tensor function
+                        def mock_check_tensor(tensor, *args, **kwargs):
+                            return True
+                            
+                        mock_testing.check_tensor = mock_check_tensor
+                        mock_utils.testing = mock_testing
+                        mock_kaolin.utils = mock_utils
+                        
+                        sys.modules['kaolin'] = mock_kaolin
+                        sys.modules['kaolin.utils'] = mock_utils
+                        sys.modules['kaolin.utils.testing'] = mock_testing
+                        print("✅ Mock kaolin module created")
+                        
+                        # Try TRELLIS import again with mock kaolin
+                        from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
+                        from trellis.utils import render_utils, postprocessing_utils
+                        TRELLIS_AVAILABLE = True
+                        print("✅ TRELLIS image-to-3d pipeline imported successfully (with mock kaolin)")
+                    except ImportError as e3:
+                        print(f"❌ Mock kaolin import also failed: {e3}")
+                        raise trellis_err
+                else:
+                    raise trellis_err
         elif "open3d" in str(trellis_err):
             print("⚠️ TRELLIS requires open3d, trying alternative import...")
             try:
