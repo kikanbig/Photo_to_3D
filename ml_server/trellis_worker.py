@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-12:50 (fix werkzeug/dash version conflict)
+Version: 2024-09-18-13:30 (fix missing FlexiCubes submodule)
 """
 import os
 import sys
