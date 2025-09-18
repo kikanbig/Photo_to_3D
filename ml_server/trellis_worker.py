@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-09:20 (with monkey patch + sklearn + addict for open3d.ml)
+Version: 2024-09-18-09:30 (with monkey patch + sklearn + addict + pandas for open3d.ml)
 """
 import os
 import sys
