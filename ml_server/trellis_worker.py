@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-12:20 (blinker in requirements.txt - avoid force reinstall)
+Version: 2024-09-18-12:30 (ignore system blinker - use --ignore-installed)
 """
 import os
 import sys

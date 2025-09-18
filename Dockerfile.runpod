@@ -25,9 +25,9 @@ RUN apt-get update && apt-get install -y \
 COPY ml_server/requirements_simple.txt ./requirements.txt
 RUN pip install --upgrade pip
 RUN echo "✅ pip upgraded successfully"
-# Skip problematic blinker upgrade - let requirements.txt handle it
-RUN pip install --no-cache-dir -r requirements.txt
-RUN echo "✅ requirements.txt installed successfully"
+# Install requirements with broken system packages ignored
+RUN pip install --no-cache-dir -r requirements.txt --ignore-installed blinker
+RUN echo "✅ requirements.txt installed successfully (ignoring system blinker)"
 
 # Install easydict separately (critical for TRELLIS)
 RUN pip install --no-cache-dir easydict==1.10.0
