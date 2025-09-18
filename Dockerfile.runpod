@@ -41,6 +41,9 @@ RUN python -c "import numpy; print('numpy OK:', numpy.__version__)" || echo "num
 RUN python -c "import matplotlib; print('matplotlib OK:', matplotlib.__version__)" || echo "matplotlib FAILED"
 RUN python -c "import plotly; print('plotly OK:', plotly.__version__)" || echo "plotly FAILED"
 RUN python -c "import dash; print('dash OK:', dash.__version__)" || echo "dash FAILED"
+RUN python -c "import pandas; print('pandas OK:', pandas.__version__)" || echo "pandas FAILED"
+RUN python -c "import sklearn; print('sklearn OK:', sklearn.__version__)" || echo "sklearn FAILED"
+RUN python -c "import addict; print('addict OK:', addict.__version__)" || echo "addict FAILED"
 RUN python -c "import open3d; print('open3d OK:', open3d.__version__)" || echo "open3d FAILED"
 
 # Clone TRELLIS repository
@@ -59,9 +62,9 @@ RUN if [ -f "pyproject.toml" ]; then pip install -e .; fi
 # Add TRELLIS to Python path
 RUN echo "export PYTHONPATH=/workspace/trellis_source:$PYTHONPATH" >> ~/.bashrc
 
-# Copy our ML server code (force cache bust)
+# Copy our ML server code (force cache bust v2)
 WORKDIR /workspace
-RUN echo "Cache bust: $(date)" > /tmp/cachebust
+RUN echo "Cache bust pandas: $(date +%s)" > /tmp/cachebust_pandas
 COPY ml_server/ .
 
 # Set Python path
