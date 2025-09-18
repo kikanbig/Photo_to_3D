@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-15:00 (mock Kaolin fallback for TRELLIS)
+Version: 2024-09-18-15:30 (FORCE UPDATE - mock Kaolin fallback for TRELLIS)
 """
 import os
 import sys
@@ -63,7 +63,7 @@ try:
                 print(f"❌ Patched import also failed: {e2}")
                 # Try kaolin mock if it's a kaolin error
                 if "kaolin" in str(e2):
-                    print("⚠️ TRELLIS requires kaolin, trying to create mock kaolin...")
+                    print("🚨 FORCE UPDATE: TRELLIS requires kaolin, creating mock kaolin...")
                     try:
                         # Create mock kaolin module
                         import torch
@@ -82,7 +82,7 @@ try:
                         sys.modules['kaolin'] = mock_kaolin
                         sys.modules['kaolin.utils'] = mock_utils
                         sys.modules['kaolin.utils.testing'] = mock_testing
-                        print("✅ Mock kaolin module created")
+                        print("✅ FORCE UPDATE: Mock kaolin module created successfully!")
                         
                         # Try TRELLIS import again with mock kaolin
                         from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
@@ -90,7 +90,7 @@ try:
                         TRELLIS_AVAILABLE = True
                         print("✅ TRELLIS image-to-3d pipeline imported successfully (with mock kaolin)")
                     except ImportError as e3:
-                        print(f"❌ Mock kaolin import also failed: {e3}")
+                        print(f"❌ FORCE UPDATE: Mock kaolin import also failed: {e3}")
                         raise trellis_err
                 else:
                     raise trellis_err
