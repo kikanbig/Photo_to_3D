@@ -37,13 +37,17 @@ RUN python -c "import utils3d; print('✅ utils3d installed successfully')"
 
 # Install Kaolin from source (NVIDIA 3D library requires CUDA build)
 RUN echo "Cache bust kaolin: $(date +%s)" > /tmp/cachebust_kaolin
-RUN echo "🔧 Installing Kaolin from source with CUDA support..."
+RUN echo "🔧 Forcefully removing any existing Kaolin..."
 RUN pip uninstall -y kaolin || echo "No kaolin to uninstall"
-RUN git clone --recursive https://github.com/NVIDIAGameWorks/kaolin.git /tmp/kaolin && \
-    cd /tmp/kaolin && \
-    python setup.py develop && \
+RUN rm -rf /usr/local/lib/python3.10/dist-packages/kaolin* || echo "No kaolin files to remove"
+RUN pip cache purge || echo "Cache purged"
+RUN echo "🔧 Installing Kaolin from source with CUDA support..."
+RUN git clone --recursive https://github.com/NVIDIAGameWorks/kaolin.git /tmp/kaolin
+RUN cd /tmp/kaolin && echo "📋 Kaolin source cloned, building..." && \
+    FORCE_CUDA=1 python setup.py develop --user && \
     echo "✅ Kaolin installed from source successfully" || \
     echo "⚠️ Kaolin source installation failed, TRELLIS will use fallback mode"
+RUN python -c "import kaolin; print('✅ Kaolin import test:', kaolin.__version__)" || echo "❌ Kaolin import failed"
 
 # Install open3d separately (force upgrade to resolve conflicts)
 RUN pip install --no-cache-dir --force-reinstall --no-deps open3d==0.17.0

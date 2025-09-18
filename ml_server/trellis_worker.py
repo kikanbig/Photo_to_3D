@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-14:30 (install Kaolin from source with CUDA)
+Version: 2024-09-18-14:45 (force clean Kaolin install with CUDA)
 """
 import os
 import sys
