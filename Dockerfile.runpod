@@ -49,6 +49,7 @@ RUN python -c "import sklearn; print('sklearn OK:', sklearn.__version__)" || ech
 RUN python -c "import addict; print('addict OK:', addict.__version__)" || echo "addict FAILED"
 RUN python -c "import utils3d; print('utils3d OK:', utils3d.__version__)" || echo "utils3d FAILED"
 RUN python -c "import open3d; print('open3d OK:', open3d.__version__)" || echo "open3d FAILED"
+RUN python -c "import kaolin; print('kaolin OK:', kaolin.__version__)" || echo "kaolin FAILED"
 
 # Clone TRELLIS repository with submodules (FlexiCubes)
 RUN git clone --recursive https://github.com/microsoft/TRELLIS.git /workspace/trellis_source

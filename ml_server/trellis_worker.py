@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-13:30 (fix missing FlexiCubes submodule)
+Version: 2024-09-18-13:45 (add missing Kaolin dependency)
 """
 import os
 import sys
