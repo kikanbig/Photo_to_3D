@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-10:00 (pandas fixed + utils3d for TRELLIS gaussian models)
+Version: 2024-09-18-12:05 (fixed blinker conflict + all dependencies)
 """
 import os
 import sys

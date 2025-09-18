@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 # Copy requirements and install Python dependencies
 COPY ml_server/requirements_simple.txt ./requirements.txt
 RUN pip install --upgrade pip && \
+    pip install --force-reinstall --no-deps blinker>=1.6.0 && \
     pip install --no-cache-dir -r requirements.txt
 
 # Install easydict separately (critical for TRELLIS)
