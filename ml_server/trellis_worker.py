@@ -109,26 +109,6 @@ try:
                 raise trellis_err
         else:
             raise trellis_err
-        if "plotly" in str(trellis_err) or "dash" in str(trellis_err):
-            print("⚠️ TRELLIS requires plotly/dash, trying to patch open3d import...")
-            try:
-                # Monkey patch open3d to avoid visualization imports
-                import sys
-                import types
-                
-                # Create a mock visualization module
-                mock_viz = types.ModuleType('open3d.visualization')
-                sys.modules['open3d.visualization'] = mock_viz
-                
-                # Try to import TRELLIS again with patched open3d
-                from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
-                from trellis.utils import render_utils, postprocessing_utils
-                TRELLIS_AVAILABLE = True
-                print("✅ TRELLIS image-to-3d pipeline imported successfully (with patched open3d)")
-            except ImportError as e2:
-                print(f"❌ Patched import also failed: {e2}")
-                else:
-                    raise trellis_err
         elif "open3d" in str(trellis_err):
             print("⚠️ TRELLIS requires open3d, trying alternative import...")
             try:
