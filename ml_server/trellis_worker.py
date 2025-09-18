@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-12:15 (diagnostic build - separated pip commands)
+Version: 2024-09-18-12:20 (blinker in requirements.txt - avoid force reinstall)
 """
 import os
 import sys

@@ -25,8 +25,7 @@ RUN apt-get update && apt-get install -y \
 COPY ml_server/requirements_simple.txt ./requirements.txt
 RUN pip install --upgrade pip
 RUN echo "✅ pip upgraded successfully"
-RUN pip install --force-reinstall --no-deps blinker>=1.6.0
-RUN echo "✅ blinker installed successfully"
+# Skip problematic blinker upgrade - let requirements.txt handle it
 RUN pip install --no-cache-dir -r requirements.txt
 RUN echo "✅ requirements.txt installed successfully"
 
