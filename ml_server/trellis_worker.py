@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-12:05 (fixed blinker conflict + all dependencies)
+Version: 2024-09-18-12:15 (diagnostic build - separated pip commands)
 """
 import os
 import sys
