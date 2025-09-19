@@ -149,7 +149,7 @@ except ImportError as e:
             trellis_core = importlib.util.module_from_spec(spec)
             # Don't execute - just mark as partially available
             print("⚠️ TRELLIS core found, using fallback mode")
-            TRELLIS_AVAILABLE = False  # Keep false for now
+            TRELLIS_AVAILABLE = True  # Enable TRELLIS with Mock modules
         else:
             TRELLIS_AVAILABLE = False
     except Exception as e2:
