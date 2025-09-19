@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-16:15 (FORCE REBUILD - Fixed use_auth_token -> token)
+Version: 2024-09-19-16:30 (FORCE REBUILD - Clear Docker cache)
 """
 import os
 import sys
