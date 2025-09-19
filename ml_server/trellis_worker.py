@@ -11,6 +11,9 @@ from PIL import Image
 import torch
 import numpy as np
 
+# Import mock modules
+from .mock_nvdiffrast import create_mock_nvdiffrast
+
 # Add TRELLIS to Python path
 trellis_path = '/workspace/trellis_source'
 sys.path.append(trellis_path)
@@ -66,6 +69,9 @@ try:
                 sys.modules['kaolin.utils.testing'] = mock_testing
                 print("✅ FORCE UPDATE: Mock kaolin module created successfully!")
                 
+                # Create mock nvdiffrast
+                create_mock_nvdiffrast()
+                
                 # Try TRELLIS import again with mock kaolin
                 from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
                 from trellis.utils import render_utils, postprocessing_utils
@@ -98,6 +104,9 @@ try:
                 sys.modules['kaolin.utils'] = mock_utils
                 sys.modules['kaolin.utils.testing'] = mock_testing
                 print("✅ FORCE UPDATE: Mock kaolin module created successfully!")
+                
+                # Create mock nvdiffrast
+                create_mock_nvdiffrast()
                 
                 # Try TRELLIS import again with mock kaolin
                 from trellis.pipelines.trellis_image_to_3d import TrellisImageTo3DPipeline
