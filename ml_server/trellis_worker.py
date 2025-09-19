@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-18-21:00 (FORCE REBUILD - mock Kaolin fallback for TRELLIS)
+Version: 2024-09-19-15:30 (FORCE REBUILD - Mock igraph added for TRELLIS)
 """
 import os
 import sys
