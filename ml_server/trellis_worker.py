@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-15:30 (FORCE REBUILD - Mock igraph added for TRELLIS)
+Version: 2024-09-19-16:00 (FORCE REBUILD - HF_TOKEN authentication added)
 """
 import os
 import sys
@@ -184,11 +184,21 @@ class TrellisWorker:
             os.environ.setdefault("ATTN_BACKEND", "xformers")
             os.environ.setdefault("SPCONV_ALGO", "native")
             
-            # Load pipeline
+            # Load pipeline - use the correct model path
             model_path = os.environ.get("TRELLIS_MODEL_PATH", "microsoft/TRELLIS-image-large")
             print(f"📥 Loading model: {model_path}")
             
-            self.pipeline = TrellisImageTo3DPipeline.from_pretrained(model_path)
+            # Set Hugging Face token for authentication
+            hf_token = os.environ.get("HF_TOKEN")
+            if hf_token:
+                print(f"🔑 Using HF_TOKEN for authentication")
+                self.pipeline = TrellisImageTo3DPipeline.from_pretrained(
+                    model_path, 
+                    use_auth_token=hf_token
+                )
+            else:
+                print(f"⚠️ No HF_TOKEN found, trying without authentication")
+                self.pipeline = TrellisImageTo3DPipeline.from_pretrained(model_path)
             
             if self.device == "cuda":
                 self.pipeline = self.pipeline.cuda()
