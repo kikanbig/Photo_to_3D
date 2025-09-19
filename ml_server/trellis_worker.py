@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-16:30 (FORCE REBUILD - Clear Docker cache)
+Version: 2024-09-19-16:45 (FORCE REBUILD - Fix token parameter)
 """
 import os
 import sys
