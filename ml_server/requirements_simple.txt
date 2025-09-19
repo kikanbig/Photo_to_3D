@@ -37,6 +37,7 @@ pandas>=1.5.0
 utils3d>=0.1.0
 # kaolin>=0.15.0
 # nvdiffrast>=0.3.0  # Install from GitHub in Dockerfile (not available on PyPI)
+xatlas>=0.0.7
 # blinker>=1.6.0  # Excluded due to distutils conflict with base image
 werkzeug==2.2.3
 dash==2.14.1

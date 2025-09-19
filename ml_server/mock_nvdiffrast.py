@@ -18,7 +18,14 @@ def create_mock_nvdiffrast():
     sys.modules['nvdiffrast'] = mock_nvdiffrast
     sys.modules['nvdiffrast.torch'] = mock_nvdiffrast.torch
     
-    print("✅ Mock nvdiffrast module created successfully!")
+    # Mock xatlas module for TRELLIS compatibility
+    mock_xatlas = type('MockXatlas', (), {
+        'parametrize': lambda *args, **kwargs: None,
+        'pack': lambda *args, **kwargs: None
+    })()
+    sys.modules['xatlas'] = mock_xatlas
+    
+    print("✅ Mock nvdiffrast and xatlas modules created successfully!")
     return mock_nvdiffrast
 
 if __name__ == "__main__":
