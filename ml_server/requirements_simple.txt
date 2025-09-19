@@ -39,6 +39,7 @@ utils3d>=0.1.0
 # nvdiffrast>=0.3.0  # Install from GitHub in Dockerfile (not available on PyPI)
 xatlas>=0.0.7
 pyvista>=0.40.0
+pymeshfix>=0.16.0
 # blinker>=1.6.0  # Excluded due to distutils conflict with base image
 werkzeug==2.2.3
 dash==2.14.1

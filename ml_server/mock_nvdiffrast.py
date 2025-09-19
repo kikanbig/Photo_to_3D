@@ -33,7 +33,16 @@ def create_mock_nvdiffrast():
     })()
     sys.modules['pyvista'] = mock_pyvista
     
-    print("✅ Mock nvdiffrast, xatlas and pyvista modules created successfully!")
+    # Mock pymeshfix module for TRELLIS compatibility
+    mock_pymeshfix = type('MockPymeshfix', (), {
+        '_meshfix': type('MockMeshfix', (), {
+            'clean': lambda *args, **kwargs: None,
+            'repair': lambda *args, **kwargs: None
+        })()
+    })()
+    sys.modules['pymeshfix'] = mock_pymeshfix
+    
+    print("✅ Mock nvdiffrast, xatlas, pyvista and pymeshfix modules created successfully!")
     return mock_nvdiffrast
 
 if __name__ == "__main__":
