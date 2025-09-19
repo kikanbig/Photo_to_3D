@@ -32,6 +32,7 @@ RUN echo "✅ requirements.txt installed successfully (ignoring system blinker)"
 # Install nvdiffrast from GitHub (not available on PyPI)
 RUN pip install --no-cache-dir git+https://github.com/NVlabs/nvdiffrast.git
 RUN echo "✅ nvdiffrast installed from GitHub"
+RUN python -c "import nvdiffrast; print('✅ nvdiffrast import test:', nvdiffrast.__version__)" || echo "❌ nvdiffrast import failed"
 
 # Install critical dependencies separately
 RUN pip install --no-cache-dir easydict==1.10.0
