@@ -107,8 +107,6 @@ try:
             except ImportError as e3:
                 print(f"❌ FORCE UPDATE: Mock kaolin import also failed: {e3}")
                 raise trellis_err
-        else:
-            raise trellis_err
         elif "open3d" in str(trellis_err):
             print("⚠️ TRELLIS requires open3d, trying alternative import...")
             try:
