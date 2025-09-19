@@ -25,7 +25,15 @@ def create_mock_nvdiffrast():
     })()
     sys.modules['xatlas'] = mock_xatlas
     
-    print("✅ Mock nvdiffrast and xatlas modules created successfully!")
+    # Mock pyvista module for TRELLIS compatibility
+    mock_pyvista = type('MockPyvista', (), {
+        'PolyData': lambda *args, **kwargs: None,
+        'save': lambda *args, **kwargs: None,
+        'read': lambda *args, **kwargs: None
+    })()
+    sys.modules['pyvista'] = mock_pyvista
+    
+    print("✅ Mock nvdiffrast, xatlas and pyvista modules created successfully!")
     return mock_nvdiffrast
 
 if __name__ == "__main__":
