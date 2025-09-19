@@ -12,7 +12,7 @@ import torch
 import numpy as np
 
 # Import mock modules
-from .mock_nvdiffrast import create_mock_nvdiffrast
+from mock_nvdiffrast import create_mock_nvdiffrast
 
 # Add TRELLIS to Python path
 trellis_path = '/workspace/trellis_source'
