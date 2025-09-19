@@ -42,7 +42,15 @@ def create_mock_nvdiffrast():
     })()
     sys.modules['pymeshfix'] = mock_pymeshfix
     
-    print("✅ Mock nvdiffrast, xatlas, pyvista and pymeshfix modules created successfully!")
+    # Mock igraph module for TRELLIS compatibility
+    mock_igraph = type('MockIgraph', (), {
+        'Graph': lambda *args, **kwargs: None,
+        'Vertex': lambda *args, **kwargs: None,
+        'Edge': lambda *args, **kwargs: None
+    })()
+    sys.modules['igraph'] = mock_igraph
+    
+    print("✅ Mock nvdiffrast, xatlas, pyvista, pymeshfix and igraph modules created successfully!")
     return mock_nvdiffrast
 
 if __name__ == "__main__":
