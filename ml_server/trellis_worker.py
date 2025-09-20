@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-20:00 (FINAL FIX - NumPy + Correct Model Path)
+Version: 2024-09-19-20:15 (FIX MODEL STRUCTURE - Create ckpts directory)
 """
 import os
 import sys
