@@ -19,8 +19,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-COPY requirements.txt .
+COPY requirements_simple.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Force install NumPy 1.x to avoid compatibility issues
+RUN pip install --no-cache-dir "numpy>=1.24.0,<2.0.0" --force-reinstall
 
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source

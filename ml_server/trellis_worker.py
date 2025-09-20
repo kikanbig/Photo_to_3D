@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-16:45 (FORCE REBUILD - Fix token parameter)
+Version: 2024-09-19-17:00 (FORCE REBUILD - Fix NumPy 2.0 compatibility)
 """
 import os
 import sys
