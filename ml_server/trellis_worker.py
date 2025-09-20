@@ -187,6 +187,21 @@ class TrellisWorker:
             # Load pipeline from local storage (no HF dependency)
             local_model_path = "/workspace/models/models--microsoft--TRELLIS-image-large/snapshots"
             
+            # Debug: Check what's in /workspace/models
+            print(f"🔍 Checking /workspace/models directory...")
+            if os.path.exists("/workspace/models"):
+                print(f"📁 /workspace/models exists!")
+                for root, dirs, files in os.walk("/workspace/models"):
+                    level = root.replace("/workspace/models", '').count(os.sep)
+                    indent = ' ' * 2 * level
+                    print(f"{indent}{os.path.basename(root)}/")
+                    if level < 3:  # Show files only in first 3 levels
+                        subindent = ' ' * 2 * (level + 1)
+                        for file in files[:3]:
+                            print(f"{subindent}{file}")
+            else:
+                print(f"❌ /workspace/models does not exist!")
+            
             # Find the actual model directory
             if os.path.exists(local_model_path):
                 snapshots = os.listdir(local_model_path)
