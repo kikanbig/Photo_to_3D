@@ -41,6 +41,8 @@ RUN mkdir -p /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/
 RUN echo "🔄 Downloading TRELLIS model files directly..." && \
     cd /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main && \
     wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/pipeline.json && \
+    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/config.json && \
+    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/model_index.json && \
     mkdir -p ckpts && \
     cd ckpts && \
     wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/ckpts/ss_flow_img_dit_L_16l8_fp16.safetensors && \

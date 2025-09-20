@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-20:15 (FIX MODEL STRUCTURE - Create ckpts directory)
+Version: 2024-09-19-20:30 (FIX 404 ERROR - Download all model files)
 """
 import os
 import sys
