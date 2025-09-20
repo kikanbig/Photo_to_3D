@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-17:45 (FORCE REBUILD - Clear Docker cache + NumPy fix)
+Version: 2024-09-19-18:00 (FORCE REBUILD - Final attempt with all fixes)
 """
 import os
 import sys
