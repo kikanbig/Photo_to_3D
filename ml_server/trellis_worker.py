@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-18:15 (FORCE REBUILD - Fix token parameter)
+Version: 2024-09-19-18:30 (FORCE REBUILD - Final token fix attempt)
 """
 import os
 import sys
