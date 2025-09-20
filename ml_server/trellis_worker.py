@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-18:30 (FORCE REBUILD - Final token fix attempt)
+Version: 2024-09-19-19:00 (LOCAL MODEL STORAGE - No HF dependency)
 """
 import os
 import sys
@@ -184,21 +184,27 @@ class TrellisWorker:
             os.environ.setdefault("ATTN_BACKEND", "xformers")
             os.environ.setdefault("SPCONV_ALGO", "native")
             
-            # Load pipeline - use the correct model path
-            model_path = os.environ.get("TRELLIS_MODEL_PATH", "microsoft/TRELLIS-image-large")
-            print(f"📥 Loading model: {model_path}")
+            # Load pipeline from local storage (no HF dependency)
+            local_model_path = "/workspace/models/models--microsoft--TRELLIS-image-large/snapshots"
             
-            # Set Hugging Face token for authentication
-            hf_token = os.environ.get("HF_TOKEN")
-            if hf_token:
-                print(f"🔑 Using HF_TOKEN for authentication")
-                self.pipeline = TrellisImageTo3DPipeline.from_pretrained(
-                    model_path, 
-                    token=hf_token
-                )
+            # Find the actual model directory
+            if os.path.exists(local_model_path):
+                snapshots = os.listdir(local_model_path)
+                if snapshots:
+                    model_path = os.path.join(local_model_path, snapshots[0])
+                    print(f"📥 Loading LOCAL model: {model_path}")
+                    print("🚀 No Hugging Face dependency - using local storage!")
+                else:
+                    # Fallback to HF if local not found
+                    model_path = os.environ.get("TRELLIS_MODEL_PATH", "microsoft/TRELLIS-image-large")
+                    print(f"⚠️ Local model not found, falling back to HF: {model_path}")
             else:
-                print(f"⚠️ No HF_TOKEN found, trying without authentication")
-                self.pipeline = TrellisImageTo3DPipeline.from_pretrained(model_path)
+                # Fallback to HF if local not found
+                model_path = os.environ.get("TRELLIS_MODEL_PATH", "microsoft/TRELLIS-image-large")
+                print(f"⚠️ Local model not found, falling back to HF: {model_path}")
+            
+            # Load pipeline (no token needed for local)
+            self.pipeline = TrellisImageTo3DPipeline.from_pretrained(model_path)
             
             if self.device == "cuda":
                 self.pipeline = self.pipeline.cuda()

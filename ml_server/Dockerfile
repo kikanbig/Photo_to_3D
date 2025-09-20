@@ -32,8 +32,19 @@ RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
 WORKDIR /workspace/trellis_source
 RUN pip install -e .
 
-# Copy our ML server code
+# Download TRELLIS model locally during build
 WORKDIR /workspace
+RUN python -c "
+import os
+os.environ['HF_HOME'] = '/workspace/models'
+from transformers import TrellisImageTo3DPipeline
+print('🔄 Downloading TRELLIS model locally...')
+pipeline = TrellisImageTo3DPipeline.from_pretrained('microsoft/TRELLIS-image-large')
+print('✅ TRELLIS model downloaded successfully!')
+print(f'📁 Model stored at: /workspace/models')
+"
+
+# Copy our ML server code
 COPY . .
 
 # Set Python path
