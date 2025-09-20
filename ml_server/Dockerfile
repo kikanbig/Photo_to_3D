@@ -20,10 +20,11 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements and install Python dependencies
 COPY requirements_simple.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Force install NumPy 1.x to avoid compatibility issues with PyTorch 2.1.0
-RUN pip uninstall -y numpy && pip install --no-cache-dir "numpy<2.0" --force-reinstall
+# Force install NumPy 1.x FIRST to avoid compatibility issues with PyTorch 2.1.0
+RUN pip uninstall -y numpy && pip install --no-cache-dir "numpy==1.24.4" --force-reinstall
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
@@ -34,16 +35,16 @@ RUN pip install -e .
 
 # Download TRELLIS model files directly from Hugging Face
 WORKDIR /workspace
-RUN mkdir -p /workspace/models/microsoft--TRELLIS-image-large/snapshots/main
+RUN mkdir -p /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main
 
 # Download model files directly using wget
 RUN echo "🔄 Downloading TRELLIS model files directly..." && \
-    cd /workspace/models/microsoft--TRELLIS-image-large/snapshots/main && \
+    cd /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main && \
     wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/pipeline.json && \
     wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/ckpts/ss_flow_img_dit_L_16l8_fp16.safetensors && \
     wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/ckpts/slat_flow_img_dit_L_64l8p2_fp16.safetensors && \
     echo "✅ Model files downloaded successfully!" && \
-    ls -la /workspace/models/microsoft--TRELLIS-image-large/snapshots/main/
+    ls -la /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main/
 
 # Test model loading
 RUN python -c "

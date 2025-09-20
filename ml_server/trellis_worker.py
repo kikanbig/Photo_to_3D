@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-19:15 (ENHANCED LOCAL MODEL DOWNLOAD - With diagnostics)
+Version: 2024-09-19-20:00 (FINAL FIX - NumPy + Correct Model Path)
 """
 import os
 import sys

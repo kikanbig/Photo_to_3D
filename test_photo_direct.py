@@ -6,6 +6,10 @@ import requests
 import base64
 import json
 import time
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения
+load_dotenv()
 
 def test_photo_direct():
     """
