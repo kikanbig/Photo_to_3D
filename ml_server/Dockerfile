@@ -36,12 +36,38 @@ RUN pip install -e .
 WORKDIR /workspace
 RUN python -c "
 import os
+import sys
 os.environ['HF_HOME'] = '/workspace/models'
-from transformers import TrellisImageTo3DPipeline
 print('🔄 Downloading TRELLIS model locally...')
-pipeline = TrellisImageTo3DPipeline.from_pretrained('microsoft/TRELLIS-image-large')
-print('✅ TRELLIS model downloaded successfully!')
-print(f'📁 Model stored at: /workspace/models')
+print(f'📁 HF_HOME set to: {os.environ[\"HF_HOME\"]}')
+
+try:
+    from transformers import TrellisImageTo3DPipeline
+    print('✅ Transformers imported successfully')
+    
+    # Try to download the model
+    pipeline = TrellisImageTo3DPipeline.from_pretrained('microsoft/TRELLIS-image-large')
+    print('✅ TRELLIS model downloaded successfully!')
+    
+    # Check if model files exist
+    model_dir = '/workspace/models'
+    if os.path.exists(model_dir):
+        print(f'📁 Model directory exists: {model_dir}')
+        for root, dirs, files in os.walk(model_dir):
+            level = root.replace(model_dir, '').count(os.sep)
+            indent = ' ' * 2 * level
+            print(f'{indent}{os.path.basename(root)}/')
+            subindent = ' ' * 2 * (level + 1)
+            for file in files[:5]:  # Show first 5 files
+                print(f'{subindent}{file}')
+            if len(files) > 5:
+                print(f'{subindent}... and {len(files) - 5} more files')
+    else:
+        print('❌ Model directory not found!')
+        
+except Exception as e:
+    print(f'❌ Error downloading model: {e}')
+    sys.exit(1)
 "
 
 # Copy our ML server code

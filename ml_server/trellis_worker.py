@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-19:00 (LOCAL MODEL STORAGE - No HF dependency)
+Version: 2024-09-19-19:15 (ENHANCED LOCAL MODEL DOWNLOAD - With diagnostics)
 """
 import os
 import sys
