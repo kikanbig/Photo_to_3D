@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements_simple.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Force install NumPy 1.x to avoid compatibility issues
-RUN pip uninstall -y numpy && pip install --no-cache-dir "numpy==1.24.4" --force-reinstall
+# Force install NumPy 1.x to avoid compatibility issues with PyTorch 2.1.0
+RUN pip uninstall -y numpy && pip install --no-cache-dir "numpy<2.0" --force-reinstall
 
 # Clone TRELLIS repository
 RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source

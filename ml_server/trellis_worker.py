@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-17:15 (FORCE REBUILD - Fix NumPy 2.0 with uninstall)
+Version: 2024-09-19-17:30 (FORCE REBUILD - Fix NumPy<2.0 + use_auth_token)
 """
 import os
 import sys
@@ -194,7 +194,7 @@ class TrellisWorker:
                 print(f"🔑 Using HF_TOKEN for authentication")
                 self.pipeline = TrellisImageTo3DPipeline.from_pretrained(
                     model_path, 
-                    token=hf_token
+                    use_auth_token=hf_token
                 )
             else:
                 print(f"⚠️ No HF_TOKEN found, trying without authentication")
