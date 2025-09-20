@@ -1,6 +1,6 @@
 """
 TRELLIS Worker for 3D Generation
-Version: 2024-09-19-20:45 (FORCE REBUILD - Complete model files)
+Version: 2024-09-19-21:00 (RADICAL FIX - Use transformers download)
 """
 import os
 import sys

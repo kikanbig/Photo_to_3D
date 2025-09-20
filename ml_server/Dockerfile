@@ -33,37 +33,31 @@ RUN git clone https://github.com/microsoft/TRELLIS.git /workspace/trellis_source
 WORKDIR /workspace/trellis_source
 RUN pip install -e .
 
-# Download TRELLIS model files directly from Hugging Face
+# Download TRELLIS model using transformers during build
 WORKDIR /workspace
-RUN mkdir -p /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main
-
-# Download model files directly using wget
-RUN echo "🔄 Downloading TRELLIS model files directly..." && \
-    cd /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main && \
-    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/pipeline.json && \
-    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/config.json && \
-    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/model_index.json && \
-    mkdir -p ckpts && \
-    cd ckpts && \
-    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/ckpts/ss_flow_img_dit_L_16l8_fp16.safetensors && \
-    wget -q https://huggingface.co/microsoft/TRELLIS-image-large/resolve/main/ckpts/slat_flow_img_dit_L_64l8p2_fp16.safetensors && \
-    echo "✅ Model files downloaded successfully!" && \
-    ls -la /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main/ && \
-    ls -la /workspace/models/models--microsoft--TRELLIS-image-large/snapshots/main/ckpts/
-
-# Test model loading
-RUN python -c "
+RUN echo "🔄 Downloading TRELLIS model using transformers..." && \
+    python -c "
 import os
 os.environ['HF_HOME'] = '/workspace/models'
-print('🔍 Testing model loading...')
+print('🔍 Downloading TRELLIS model...')
 try:
     from transformers import TrellisImageTo3DPipeline
-    pipeline = TrellisImageTo3DPipeline.from_pretrained('microsoft/TRELLIS-image-large')
-    print('✅ TRELLIS model loaded successfully!')
+    print('📥 Downloading model files...')
+    pipeline = TrellisImageTo3DPipeline.from_pretrained('microsoft/TRELLIS-image-large', cache_dir='/workspace/models')
+    print('✅ TRELLIS model downloaded successfully!')
+    print('📁 Model files location: /workspace/models')
+    import os
+    for root, dirs, files in os.walk('/workspace/models'):
+        level = root.replace('/workspace/models', '').count(os.sep)
+        indent = ' ' * 2 * level
+        print(f'{indent}{os.path.basename(root)}/')
+        if level < 3:
+            subindent = ' ' * 2 * (level + 1)
+            for file in files[:5]:
+                print(f'{subindent}{file}')
 except Exception as e:
-    print(f'❌ Error loading model: {e}')
-    # Don't exit, just warn
-    print('⚠️ Model loading failed, but continuing build...')
+    print(f'❌ Error downloading model: {e}')
+    print('⚠️ Model download failed, but continuing build...')
 "
 
 # Copy our ML server code
